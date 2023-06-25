@@ -58,7 +58,15 @@ function getJSON(obj) {
  *
  */
 function fromJSON(proto, json) {
-  return JSON.parse(json);
+  const obj = Object.create(proto);
+  const data = JSON.parse(json);
+  Object.keys(data).forEach((key) => {
+    if (Object.prototype.hasOwnProperty.call(data, key)) {
+      obj[key] = data[key];
+    }
+  });
+
+  return obj;
 }
 
 
