@@ -196,8 +196,14 @@ function isInsideCircle(circle, point) {
  *   'abracadabra'  => 'c'
  *   'entente' => null
  */
-function findFirstSingleChar(/* str */) {
-  throw new Error('Not implemented');
+function findFirstSingleChar(str) {
+  const charCount = new Map();
+
+  [...str].forEach((char) => {
+    charCount.set(char, (charCount.get(char) || 0) + 1);
+  });
+
+  return [...str].find((char) => charCount.get(char) === 1) || null;
 }
 
 
@@ -223,10 +229,15 @@ function findFirstSingleChar(/* str */) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
-}
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  const start = Math.min(a, b);
+  const end = Math.max(a, b);
 
+  const startBracket = isStartIncluded ? '[' : '(';
+  const endBracket = isEndIncluded ? ']' : ')';
+
+  return `${startBracket}${start}, ${end}${endBracket}`;
+}
 
 /**
  * Reverse the specified string (put all chars in reverse order)
@@ -350,8 +361,35 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  function isOpeningBracket(bracket) {
+    return ['[', '(', '{', '<'].includes(bracket);
+  }
+  function isClosingBracket(bracket) {
+    return [']', ')', '}', '>'].includes(bracket);
+  }
+  function isMatchingBracket(openingBracket, closingBracket) {
+    const brackets = {
+      '[': ']',
+      '(': ')',
+      '{': '}',
+      '<': '>',
+    };
+    return brackets[openingBracket] === closingBracket;
+  }
+  const stack = [];
+  for (let i = 0; i < str.length; i += 1) {
+    const bracket = str[i];
+    if (isOpeningBracket(bracket)) {
+      stack.push(bracket);
+    } else if (isClosingBracket(bracket)) {
+      if (stack.length === 0 || !isMatchingBracket(stack.pop(), bracket)) {
+        return false;
+      }
+    }
+  }
+
+  return stack.length === 0;
 }
 
 
@@ -428,8 +466,25 @@ function getCommonDirectoryPath(pathes) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const rowsM1 = m1.length;
+  const colsM1 = m1[0].length;
+  const colsM2 = m2[0].length;
+
+  const result = [];
+
+  for (let i = 0; i < rowsM1; i += 1) {
+    result[i] = [];
+    for (let j = 0; j < colsM2; j += 1) {
+      let sum = 0;
+      for (let k = 0; k < colsM1; k += 1) {
+        sum += m1[i][k] * m2[k][j];
+      }
+      result[i][j] = sum;
+    }
+  }
+
+  return result;
 }
 
 
